@@ -35,10 +35,12 @@ var db, err = sql.Open("sqlite", "sqlite.db")
 
 type (
 	AppConfig struct {
-		DatabaseUrl       string `yaml:"database_url"`
-		MqttBrokerAddress string `yaml:"mqtt_broker_address"`
-		MqttBrokerPort    string `yaml:"mqtt_broker_port"`
-		UplinkEndpoint    string `yaml:"uplink_endpoint"`
+		DatabaseUrl        string `yaml:"database_url"`
+		MqttBrokerAddress  string `yaml:"mqtt_broker_address"`
+		MqttBrokerPort     string `yaml:"mqtt_broker_port"`
+		MqttBrokerUser     string `yaml:"mqtt_broker_user"`
+		MqttBrokerPassword string `yaml:"mqtt_broker_password"`
+		UplinkEndpoint     string `yaml:"uplink_endpoint"`
 	}
 
 	ConfigFile map[string]*AppConfig
@@ -152,12 +154,16 @@ func main() {
 
 	broker := appConfig.MqttBrokerAddress
 	port := appConfig.MqttBrokerPort
+	username := appConfig.MqttBrokerUser
+	password := appConfig.MqttBrokerPassword
 	infoLog.Println(
 		"Connecting to MQTT Broker with " +
 			Blue + "Address=" + broker + " Port=" + port + Reset + " ...")
 
 	opts := mqtt.NewClientOptions()
 	opts.AddBroker(fmt.Sprintf("tcp://%s:%s", broker, port))
+	opts.SetUsername(username)
+	opts.SetPassword(password)
 	opts.SetAutoReconnect(true)
 	opts.SetMaxReconnectInterval(30 * time.Second)
 	opts.SetConnectRetry(true)

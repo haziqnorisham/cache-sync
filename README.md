@@ -143,6 +143,36 @@ Close & save the file, our configuration is now complete. All we need to do now 
 sudo systemctl restart mosquitto
 ```
 
+### ⚙️Configuring cache-sync
+
+Download the application binary. Refer to ```💽Binaries?``` section for details. We can now create a new ```config.yaml``` in the same directory of the __*cache-sync*__ binary :
+
+```bash
+nano config.yaml
+```
+
+This is a sample content for ```config.yaml``` file :
+
+```yaml
+dev:
+  database_url: postgres://postgres:@localhost:5432/database_dev
+  mqtt_broker_address: 127.0.0.1
+  mqtt_broker_port: 1883
+  mqtt_broker_topic: application/
+  mqtt_broker_user: cache-sync
+  mqtt_broker_password: changeme
+  uplink_endpoint: http://127.0.0.1:1880/cache-sync/uplink
+prod:
+  database_url: postgres://postgres:@localhost:5432/database_dev
+  mqtt_broker_address: 127.0.0.1
+  mqtt_broker_port: 1883
+  mqtt_broker_topic: application/
+  mqtt_broker_user: cache-sync
+  mqtt_broker_password: changeme
+  uplink_endpoint: http://127.0.0.1:1880/cache-sync/uplink
+```
+
+
 ## 📜License
 
 __*cache-sync*__ is maintained by [haziqnorisham](https://github.com/haziqnorisham) for [Camart Sdn. Bhd.](https://camartcctv.com)
