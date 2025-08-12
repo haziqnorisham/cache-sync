@@ -183,6 +183,16 @@ drwxr-x--- 7 ubuntu ubuntu     4096 Aug 12 09:24 ..
 drwxrwxr-x 2 ubuntu ubuntu     4096 Aug 12 09:24 .
 ```
 
+Our configuration is done. Finally, we give proper permission to the binary & run __*cache-sync*__ :
+
+```bash
+chmod +x ./cache-sync_amd64.bin
+```
+```bash
+./cache-sync_amd64.bin
+```
+
+Application will start & we can see a simmilar output to the screenshot above.
 
 ## 📜License
 
