@@ -1,0 +1,12 @@
+dev:
+  database_url: postgres://pg_user:pg_password@localhost:5432/cache-sync
+  mqtt_broker_address: 10.7.0.1
+  mqtt_broker_port: 1883
+  mqtt_broker_topic: application/b3612a25-57bb-45b8-ad92-7ed9d44a4ce3/device
+  uplink_endpoint: http://localhost:8080/cache-sync/uplink
+prod:
+  database_url: postgres://pg_user:pg_password@localhost:5432/cache-sync
+  mqtt_broker_address: 10.7.0.1
+  mqtt_broker_port: 1883
+  mqtt_broker_topic: application/b3612a25-57bb-45b8-ad92-7ed9d44a4ce3/device
+  uplink_endpoint: http://localhost:8080/cache-sync/uplink
