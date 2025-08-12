@@ -192,7 +192,7 @@ chmod +x ./cache-sync_amd64.bin
 ./cache-sync_amd64.bin
 ```
 
-Application will start & we can see a simmilar output to the screenshot above.
+Application will start & we can see a simmilar output to the screenshot above. For subsequent runs of the application, is normal to see a ```table already exist/created``` warning during application startup.
 
 ## 📜License
 
