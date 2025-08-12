@@ -20,16 +20,16 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
 
-      - name: Build (Native)
+      - name: Build (AMD64)
         if: matrix.platform == 'linux/amd64'
         run: |
-          go build -o cacheSync-amd64 ias_sync_slave.go
+          go build -o cache-sync_amd64.bin ias_sync_slave.go
           echo "AMD64 binary built"
 
       - name: Build (ARM64)
         if: matrix.platform == 'linux/arm64'
         run: |
-          GOOS=linux GOARCH=arm64 go build -o cacheSync-arm64 ias_sync_slave.go
+          GOOS=linux GOARCH=arm64 go build -o cache-sync_arm64.bin ias_sync_slave.go
           echo "ARM64 binary built"
 
       - name: Upload artifacts
@@ -37,4 +37,4 @@ jobs:
         with:
           name: binaries-${{ matrix.platform }}
           path: |
-            cache-sync_*
+            cache-sync_*.bin
