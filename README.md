@@ -29,6 +29,15 @@ Built for harsh environments: A lightweight, multithreaded Go service that guara
 
 ![alt text](cache-sync-console.png)
 
+## 💽Binaries?
+
+Head over to __*GitHub Actions*__ tab & open the last successfull workflow run. There should be where the pre-compiled binaries are located.
+
+Binaries are only available for these platforms :
+ - Linux
+    - arm64/aarch64
+    - amd64/x64
+
 ## 📜License
 
 __*cache-sync*__ is maintained by [haziqnorisham](https://github.com/haziqnorisham) for [Camart Sdn. Bhd.](https://camartcctv.com)
