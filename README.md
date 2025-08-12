@@ -172,6 +172,17 @@ prod:
   uplink_endpoint: http://127.0.0.1:1880/cache-sync/uplink
 ```
 
+Here is an overview of the file structure for this program :
+
+```bash
+ubuntu@ubuntu:~/cache-sync$ ls -lrta
+total 15452
+-rwxrwxr-x 1 ubuntu ubuntu 15809833 Aug 12 01:20 cache-sync_amd64.bin
+-rw-rw-r-- 1 ubuntu ubuntu      586 Aug 12 09:22 config.yaml
+drwxr-x--- 7 ubuntu ubuntu     4096 Aug 12 09:24 ..
+drwxrwxr-x 2 ubuntu ubuntu     4096 Aug 12 09:24 .
+```
+
 
 ## 📜License
 
