@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-AGPLv3-blue.svg)](LICENSE)
 
-Offline-First MQTT Data Caching for __*IAS IIOT Reliability
+Offline-First MQTT Data Caching for __*IAS*__ IIOT Reliability
 
 ---
 
