@@ -38,6 +38,111 @@ Binaries are only available for these platforms :
     - arm64/aarch64
     - amd64/x64
 
+## 🏗️Deployment
+
+### 🔧Prerequisite
+
+__*cache-sync*__ will listen to an MQTT topic to cache & forward to central __*IAS*__ server endpoint for processing. With this in mind, we require an active MQTT server before we can start __*cache-sync*__. An existing external MQTT server can be used if already available.
+
+### ⚠️Assumptions
+
+It is assumed in this deplyment example, we are using a __*Ubuntu Server 24.04*__ installaion running on __*Intel amd64/x64*__ platform. The server specs used is as follows :
+
+- 4 Core Intel Sandy Bridge Era Xeon
+- 2GB DDR3 ECC RAM
+- 25GB SATA SSD Storage
+
+### 🔧Installing MQTT
+
+Make sure everythin is up-to-date :
+    
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+Install __*mosquitto*__ MQTT broker/server :
+
+```bash
+sudo apt install mosquitto -y
+```
+
+Once installaiton is done, we can verify by checking __*mosquitto*__ version :
+
+```bash
+mosquitto -v
+```
+
+mousquitto should be running as a server & we can check that by running :
+
+```bash
+sudo systemctl status mosquitto
+```
+
+If everything goes well, we should see __*mosquitto*__ in ```active (running)``` status.
+
+### ⚙️Configuring MQTT
+
+By default, __*mosquitto*__ will load all files with ```.conf``` extension that is place in this directory: 
+
+```bash
+/etc/mosquitto/conf.d/
+```
+
+As a start we will create a new ```default.conf``` file to store our initial __*mosquitto*__ configuration :
+
+```bash
+sudo touch /etc/mosquitto/conf.d/default.conf
+```
+
+Now we will edit the ```default.conf``` file with our configurations :
+
+```bash
+sudo nano /etc/mosquitto/conf.d/default.conf
+```
+
+This is the contents of the ```default.conf``` config file : 
+
+```bash
+# Config file for mosquitto
+# For lists of all supported configurations & examples, see :
+#   -> /usr/share/doc/mosquitto/examples/mosquitto.conf
+# -----------------------------------------------------------
+# By default mosquitty only allows internal connections,
+# 0.0.0.0 will allow connections from anywhere on port 1883
+listener 1883 0.0.0.0
+
+# Disable passwordless connection
+allow_anonymous false
+
+# Location of file that store user credentials
+password_file /etc/mosquitto/passwd
+```
+
+Next, we need to configure the user credential file : 
+
+```bash
+sudo nano /etc/mosquitto/passwd
+```
+
+The format used is ```username:password```, here is an example of the contents of ```/etc/mosquitto/passwd``` file : 
+
+```bash
+cache-sync:changeme
+client_02:passwd
+```
+
+Once username & password is configured in the file, we will encrypt the plain text password in that ```/etc/mosquitto/passwd``` file using:
+
+```bash
+sudo mosquitto_passwd -U /etc/mosquitto/passwd
+```
+
+Close & save the file, our configuration is now complete. All we need to do now is to restart the __*mosquitto*__ service :
+
+```bash
+sudo systemctl restart mosquitto
+```
+
 ## 📜License
 
 __*cache-sync*__ is maintained by [haziqnorisham](https://github.com/haziqnorisham) for [Camart Sdn. Bhd.](https://camartcctv.com)
