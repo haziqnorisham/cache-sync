@@ -8,7 +8,7 @@ jobs:
     runs-on: self-hosted
     container:
       # Runner docker image
-      image: ubuntu:22.04
+      image: golang:1.24.4-bookworm
     strategy:
       matrix:
         go-version: ['1.24.4']  # Explicit Go version
