@@ -1,6 +1,7 @@
 # 📒 cache-sync
 
 [![License](https://img.shields.io/badge/license-AGPLv3-blue.svg)](LICENSE)
+[![Build cache-sync (Manual Trigger)](https://github.com/haziqnorisham/cache-sync/actions/workflows/build-go.yml/badge.svg)](https://github.com/haziqnorisham/cache-sync/actions/workflows/build-go.yml)
 
 Offline-First MQTT Data Caching for __*IAS*__ IIOT Reliability
 
