@@ -26,12 +26,14 @@ jobs:
       - name: Build (AMD64)
         if: matrix.platform == 'linux_amd64'
         run: |
+          go mod tidy
           go build -o cache-sync_amd64.bin ias_sync_slave.go
           echo "AMD64 binary built"
 
       - name: Build (ARM64)
         if: matrix.platform == 'linux_arm64'
         run: |
+          go mod tidy
           GOOS=linux GOARCH=arm64 go build -o cache-sync_arm64.bin ias_sync_slave.go
           echo "ARM64 binary built"
 
