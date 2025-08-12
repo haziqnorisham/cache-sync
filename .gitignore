@@ -30,6 +30,9 @@ go.work.sum
 # locallized configuration file
 config.yaml
 
+# sqlite db binary
+sqlite.db
+
 # Editor/IDE
 # .idea/
 # .vscode/

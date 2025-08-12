@@ -24,6 +24,10 @@ Built for harsh environments: A lightweight, multithreaded Go service that guara
 
 - ✅ Multi-Architecture Support – Runs on x86, x64, and ARM (Raspberry Pi, edge devices).
 
+## 🖥️Screenshots
+
+![alt text](cache-sync-console.png)
+
 ## 📜License
 
 __*cache-sync*__ is maintained by [haziqnorisham](https://github.com/haziqnorisham) for [Camart Sdn. Bhd.](https://camartcctv.com)
