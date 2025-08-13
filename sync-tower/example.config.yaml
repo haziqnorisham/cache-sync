@@ -1,0 +1,10 @@
+dev:
+  listen_address: 0.0.0.0
+  listen_port: 8899
+  uplink_path: /cache-sync/uplink
+  database_url: postgres://pg_user:pg_password@localhost:5432/cache-sync
+prod:
+  listen_address: 0.0.0.0
+  listen_port: 8899
+  database_url: postgres://pg_user:pg_password@localhost:5432/cache-sync
+  uplink_path: /cache-sync/uplink

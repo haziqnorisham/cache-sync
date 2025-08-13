@@ -1,4 +1,4 @@
-module cache-sync
+module edge-vault
 
 go 1.24.4
 
