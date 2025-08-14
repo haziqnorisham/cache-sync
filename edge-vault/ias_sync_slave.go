@@ -207,7 +207,7 @@ func uplink_worker(t *time.Ticker, ch <-chan bool, appConfig *AppConfig) {
 		// Do work when ticker ticks
 		case <-t.C:
 
-			rows, err := db.Query("select * from UPLINK_QUEUE LIMIT 20;")
+			rows, err := db.Query("select * from UPLINK_QUEUE LIMIT 20 ORDER BY id DESC;")
 			if err != nil {
 				log.Fatal(err)
 			}
