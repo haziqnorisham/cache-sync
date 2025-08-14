@@ -36,3 +36,6 @@ sqlite.db
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# Media Files
+*.mkv
