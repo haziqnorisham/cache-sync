@@ -25,6 +25,13 @@ Built for harsh environments: A lightweight, multithreaded Go service that guara
 
 - ✅ Multi-Architecture Support – Runs on x86, x64, and ARM (Raspberry Pi, edge devices).
 
+## 🛠️Components
+
+__*cache-sync*__ solutions consists of 2 application component :
+
+- __*edge-vault*__
+- __*sync-tower*__
+
 ## 🖥️Screenshots
 
 ![alt text](cache-sync-console.png)
