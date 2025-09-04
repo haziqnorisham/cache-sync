@@ -40,9 +40,32 @@ jobs:
           GOOS=linux GOARCH=arm64 go build -o cache-sync_arm64.bin ias_sync_slave.go
           echo "ARM64 binary built"
 
-      #- name: Upload artifacts
-      #  uses: actions/upload-artifact@v4
-      #  with:
-      #    name: binaries-${{ matrix.platform }}
-      #    path: |
-      #      cache-sync_*.bin
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-${{ matrix.platform }}
+          path: |
+            ./edge-vault/cache-sync_*.bin
+
+      - name: Build-sync-tower (AMD64)
+        if: matrix.platform == 'linux_amd64'
+        working-directory: ./sync-tower
+        run: |
+          go mod tidy
+          go build -o sync-tower_amd64.bin sync_tower.go
+          echo "AMD64 binary built"
+
+      - name: Build-sync-tower (ARM64)
+        if: matrix.platform == 'linux_arm64'
+        working-directory: ./sync-tower
+        run: |
+          go mod tidy
+          GOOS=linux GOARCH=arm64 go build -o sync-tower_arm64.bin sync_tower.go
+          echo "ARM64 binary built"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-${{ matrix.platform }}
+          path: |
+            ./sync-tower/sync-tower_*.bin
