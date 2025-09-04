@@ -5,10 +5,11 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
-    container:
+    #runs-on: self-hosted
+    runs-on: ubuntu-latest
+    #container:
       # Runner docker image
-      image: golang:1.24.4-bookworm
+    #  image: golang:1.24.4-bookworm
     strategy:
       matrix:
         go-version: ['1.24.4']  # Explicit Go version
@@ -23,23 +24,25 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
 
-      - name: Build (AMD64)
+      - name: Build-edge-vault (AMD64)
         if: matrix.platform == 'linux_amd64'
+        working-directory: ./edge-vault
         run: |
           go mod tidy
           go build -o cache-sync_amd64.bin ias_sync_slave.go
           echo "AMD64 binary built"
 
-      - name: Build (ARM64)
+      - name: Build-edge-vault (ARM64)
         if: matrix.platform == 'linux_arm64'
+        working-directory: ./edge-vault
         run: |
           go mod tidy
           GOOS=linux GOARCH=arm64 go build -o cache-sync_arm64.bin ias_sync_slave.go
           echo "ARM64 binary built"
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: binaries-${{ matrix.platform }}
-          path: |
-            cache-sync_*.bin
+      #- name: Upload artifacts
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: binaries-${{ matrix.platform }}
+      #    path: |
+      #      cache-sync_*.bin
