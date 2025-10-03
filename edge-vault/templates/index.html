@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/main.css">
+<body>
+    <h1>IAS Gateway</h1>
+    <fieldset>
+        <legend>edge-vault</legend>
+        <table>
+            <tr>
+                <td>Hostname</td>
+                <td>{{.Hostname}}</td>
+            </tr>
+                <tr>
+                <td>DatabaseUrl</td>
+                <td>{{.DatabaseUrl}}</td>
+            </tr>
+            </tr>
+                <tr>
+                <td>MqttBrokerAddress</td>
+                <td>{{.MqttBrokerAddress}}</td>
+            </tr>
+            </tr>
+                <tr>
+                <td>MqttBrokerPort</td>
+                <td>{{.MqttBrokerPort}}</td>
+            </tr>
+            </tr>
+                <tr>
+                <td>MqttBrokerUser</td>
+                <td>{{.MqttBrokerUser}}</td>
+            </tr>
+            </tr>
+                <tr>
+                <td>UplinkEndpoint</td>
+                <td>{{.UplinkEndpoint}}</td>
+            </tr>
+            </tr>
+                <tr>
+                <td>WebUiPort</td>
+                <td>{{.WebUiPort}}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset>
+        <legend>cache info</legend>
+        <table>
+            <tr>
+                <td>CacheSize</td>
+                <td>{{.CacheSize}} MB</td>
+            </tr>
+            <tr>
+                <td>RowCount</td>
+                <td>{{.CacheRowCount}} Rows</td>
+            </tr>
+            </table>
+    </fieldset>
+    <fieldset>
+        <legend>gateway-events</legend>
+    </fieldset>
+</body>
+</html>

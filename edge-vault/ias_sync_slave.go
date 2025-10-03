@@ -41,6 +41,7 @@ type (
 		MqttBrokerUser     string `yaml:"mqtt_broker_user"`
 		MqttBrokerPassword string `yaml:"mqtt_broker_password"`
 		UplinkEndpoint     string `yaml:"uplink_endpoint"`
+		WebPort            string `yaml:"web_port"`
 	}
 
 	ConfigFile map[string]*AppConfig
@@ -126,6 +127,10 @@ func main() {
 		panic(err)
 	}
 	infoLog.Println(Green + "Successfully " + Reset + "loaded " + Blue + "config.yaml" + Reset + " configuration file!")
+
+	//Start net/http web service in a go routine
+	infoLog.Println("Launching net/http go routine...")
+	go StartServer(appConfig)
 
 	db.SetMaxOpenConns(1)
 	infoLog.Println("Initializing SQLite DB...")
