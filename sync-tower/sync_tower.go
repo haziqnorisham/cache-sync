@@ -194,7 +194,13 @@ func uplinkHandler(w http.ResponseWriter, r *http.Request, appConfig *AppConfig)
 		fields := map[string]any{}
 		for key, value := range parsed {
 			if key == "object" {
-				fields = value.(map[string]any)
+				if devEui == "009569060003e9be" {
+					temp_val := value.(map[string]any)
+					fields = temp_val["data"].(map[string]any)
+				} else {
+					fields = value.(map[string]any)
+				}
+
 			}
 		}
 
