@@ -3,8 +3,22 @@ dev:
   listen_port: 8899
   uplink_path: /cache-sync/uplink
   database_url: postgres://pg_user:pg_password@localhost:5432/cache-sync
+  influxdb_enable : y
+  influxdb_version: 2
+  influxdb_url: https://influxdb.com
+  influxdb_token: a1b2c3d4e5f6
+  influxdb_org: myorg
+  influxdb_bucket: mybckp
+  influxdb_measurement: local_test
 prod:
   listen_address: 0.0.0.0
   listen_port: 8899
   database_url: postgres://pg_user:pg_password@localhost:5432/cache-sync
   uplink_path: /cache-sync/uplink
+  influxdb_enable : y
+  influxdb_version: 2
+  influxdb_url: https://influxdb.com
+  influxdb_token: a1b2c3d4e5f6
+  influxdb_org: myorg
+  influxdb_bucket: mybckp
+  influxdb_measurement: local_test

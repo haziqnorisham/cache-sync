@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -31,11 +30,16 @@ var White = "\033[97m"
 var infoLog = log.New(os.Stdout, Green+"[INFO] "+Reset, log.LstdFlags|log.Lmicroseconds|log.Lshortfile)
 var warnLog = log.New(os.Stdout, Yellow+"[WARN] "+Reset, log.LstdFlags|log.Lmicroseconds|log.Lshortfile)
 
-var db, err = sql.Open("sqlite", "sqlite.db")
+var db_mngr, _ = NewDBManager()
+var db = db_mngr.db_sqlite
 
 type (
 	AppConfig struct {
-		DatabaseUrl        string `yaml:"database_url"`
+		DatabaseHost       string `yaml:"local_database_host"`
+		DatabasePort       string `yaml:"local_database_port"`
+		DatabaseDatabase   string `yaml:"local_database_database"`
+		DatabaseUername    string `yaml:"local_database_username"`
+		Databasepassword   string `yaml:"local_database_password"`
 		MqttBrokerAddress  string `yaml:"mqtt_broker_address"`
 		MqttBrokerPort     string `yaml:"mqtt_broker_port"`
 		MqttBrokerUser     string `yaml:"mqtt_broker_user"`
@@ -90,7 +94,7 @@ var messagePubHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Me
 		infoLog.Println(Cyan + msgId + Reset + " Inserting data into uplink queue...")
 		sqlStatement := ` INSERT INTO UPLINK_QUEUE (msg_id, deduplication_id, payload) 
 							VALUES ($1, $2, $3);`
-		_, err = db.Exec(sqlStatement, msgId, dedupeId, payload)
+		_, err := db.Exec(sqlStatement, msgId, dedupeId, payload)
 		if err != nil {
 			panic(err)
 		}
@@ -114,9 +118,6 @@ var connectLostHandler mqtt.ConnectionLostHandler = func(client mqtt.Client, err
 }
 
 func main() {
-	if err != nil {
-		panic(err)
-	}
 	mode := "dev"
 	infoLog.Println("Application is starting in " + Blue + mode + Reset + " mode")
 

@@ -14,6 +14,9 @@ import (
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"gopkg.in/yaml.v3"
+
+	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
+	"github.com/influxdata/influxdb-client-go/v2/api/write"
 )
 
 var Reset = "\033[0m"
@@ -30,13 +33,21 @@ var infoLog = log.New(os.Stdout, Green+"[INFO] "+Reset, log.LstdFlags|log.Lmicro
 var warnLog = log.New(os.Stdout, Yellow+"[WARN] "+Reset, log.LstdFlags|log.Lmicroseconds|log.Lshortfile)
 
 var db *sql.DB
+var influx_client influxdb2.Client
 
 type (
 	AppConfig struct {
-		ListenAddress string `taml:"listen_address"`
-		ListenPort    string `yaml:"listen_port"`
-		UplinkPath    string `yaml:"uplink_path"`
-		DatabaseUrl   string `yaml:"database_url"`
+		ListenAddress       string `taml:"listen_address"`
+		ListenPort          string `yaml:"listen_port"`
+		UplinkPath          string `yaml:"uplink_path"`
+		DatabaseUrl         string `yaml:"database_url"`
+		InfluxdbEnable      string `yaml:"influxdb_enable"`
+		InfluxdbVersion     string `yaml:"influxdb_version"`
+		InfluxdbUrl         string `yaml:"influxdb_url"`
+		InfluxdbToken       string `yaml:"influxdb_token"`
+		InfluxdbOrg         string `yaml:"influxdb_org"`
+		InfluxdbBucket      string `yaml:"influxdb_bucket"`
+		InfluxdbMeasurement string `yaml:"influxdb_measurement"`
 	}
 
 	ConfigFile map[string]*AppConfig
@@ -80,10 +91,20 @@ func main() {
 	}
 	infoLog.Println(Green + "Successfully " + Reset + "connected to postgres database!")
 
+	if appConfig.InfluxdbEnable == "y" {
+		infoLog.Println("Creating InfluxDB Client...")
+		influx_client = influxdb2.NewClient(appConfig.InfluxdbUrl, appConfig.InfluxdbToken)
+		infoLog.Print(Green + "Successfully " + Reset + "created InfluxDB Client Object!")
+	} else {
+		infoLog.Println("InfluxDB integration disabled")
+	}
+
 	infoLog.Println("Starting http server configuration with " + Blue + "port:" + appConfig.ListenPort + " path:" + appConfig.UplinkPath + Reset + "...")
 
 	infoLog.Println("Configuring routes...")
-	http.HandleFunc(appConfig.UplinkPath, uplinkHandler)
+	http.HandleFunc(appConfig.UplinkPath, func(w http.ResponseWriter, r *http.Request) {
+		uplinkHandler(w, r, appConfig)
+	})
 	infoLog.Println(Green + "Successfully " + Reset + "configured routes!")
 
 	server := &http.Server{
@@ -130,10 +151,11 @@ func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
 }
 
-func uplinkHandler(w http.ResponseWriter, r *http.Request) {
+func uplinkHandler(w http.ResponseWriter, r *http.Request, appConfig *AppConfig) {
 
 	enableCors(&w)
 
+	//Early return is not POST request
 	if r.Method != "POST" {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusMethodNotAllowed) // 405 status code
@@ -145,12 +167,15 @@ func uplinkHandler(w http.ResponseWriter, r *http.Request) {
 
 	infoLog.Println(Magenta + "INBOUND : " + Reset + Blue + r.Method + " " + r.RequestURI + Reset + Magenta + " Source : " + Reset + Blue + r.RemoteAddr + Reset)
 
-	var parsed map[string]interface{}
+	var parsed map[string]any
 	json.NewDecoder(r.Body).Decode(&parsed)
 
 	devEui, _ := getNestedString(parsed, "deviceInfo", "devEui")
-	println(devEui)
-	//Inbound Processing Here
+	payload_time, _ := getNestedString(parsed, "time")
+	print(payload_time)
+	parsedTime, _ := time.Parse("2006-01-02T15:04:05.999Z07:00", payload_time)
+
+	//Inbound processing Postgres here
 	sqlStatement := ` INSERT INTO chirpstack_ingest (dev_eui, tenant_name, application_name, raw_payload)
 							VALUES ($1, $2, $3, $4);`
 	_, err := db.Exec(sqlStatement, devEui, "cache-sync", "CSB-DEMO", parsed)
@@ -159,6 +184,27 @@ func uplinkHandler(w http.ResponseWriter, r *http.Request) {
 		warnLog.Println(err)
 	}
 
+	//Inbound processinf InfluxDB here.
+	if appConfig.InfluxdbEnable == "y" {
+		writeAPI := influx_client.WriteAPIBlocking(appConfig.InfluxdbOrg, appConfig.InfluxdbBucket)
+
+		tags := map[string]string{
+			"dev_eui": devEui,
+		}
+		fields := map[string]any{}
+		for key, value := range parsed {
+			if key == "object" {
+				fields = value.(map[string]any)
+			}
+		}
+
+		point := write.NewPoint(appConfig.InfluxdbMeasurement, tags, fields, parsedTime)
+		if err := writeAPI.WritePoint(context.Background(), point); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	//Response prep
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	payload := struct {
